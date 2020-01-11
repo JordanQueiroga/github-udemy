@@ -5,11 +5,11 @@ import Actions from './Actions';
 import Repos from './Repos';
 import PropTypes from "prop-types";
 
-const AppContent = ({ userinfo, repos, starred }) => (
+const AppContent = ({ userinfo, repos, starred, handleSearch }) => (
     <div className="app">
-        <Search />
+        <Search handleSearch={handleSearch} />
         {/* !! -> transforma a variável em boleano evitando rederinzar o valor dele */}
-        {!!userinfo && <UserInfo userinfo={userinfo}/>}
+        {!!userinfo && <UserInfo userinfo={userinfo} />}
         {!!userinfo && <Actions />}
         {!!repos.length &&
             < Repos className="repos" title="Repositórios:"
@@ -20,10 +20,10 @@ const AppContent = ({ userinfo, repos, starred }) => (
 )
 
 AppContent.propTypes = {
-    userinfo: PropTypes.object.isRequired,
+    userinfo: PropTypes.object,
     repos: PropTypes.array.isRequired,
-    starred: PropTypes.array.isRequired
-
+    starred: PropTypes.array.isRequired,
+    handleSearch: PropTypes.func.isRequired
 }
 
 export default AppContent;

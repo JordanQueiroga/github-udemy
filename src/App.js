@@ -8,6 +8,8 @@ class App extends Component {
     this.state = {
       userinfo: {
         username: "Jordan Queiroga",
+        photo: "https://avatars1.githubusercontent.com/u/22600632?v=4",
+        login: "JordanQueiroga",
         repos: 12,
         followers: 10,
         following: 10

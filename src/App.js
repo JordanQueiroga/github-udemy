@@ -14,12 +14,18 @@ class App extends Component {
     }
   }
 
+  getGitHubApiUrl(username, type) {
+    const internalUsername = username ? `/${username}` : "";
+    const internalType = type ? `/${type}` : "";
+    return `https://api.github.com/users${internalUsername}${internalType}`
+  }
+
   handleSearch = (e) => {
     const keyCode = e.which || e.keyCode;
     const ENTER = 13;
     const value = e.target.value
     if (keyCode === ENTER) {
-      ajax().get(`https://api.github.com/users/${value}`)
+      ajax().get(this.getGitHubApiUrl(value))
         .then((result) => {
           console.log(result)
           this.setState({
@@ -30,23 +36,24 @@ class App extends Component {
               repos: result.public_repos,
               followers: result.followers,
               following: result.following
-            }
+            },
+            repos: [],
+            starred: []
           })
         })
     }
   }
 
-  getRepos = (e) => {
-    ajax().get(`https://api.github.com/users/${this.state.userinfo.login}/repos`).then(resposta => {
-console.log(resposta)
-    })
-  }
-
-  getStarred = (e) => {
-    ajax().get(`https://api.github.com/users/${this.state.userinfo.login}/starred`).then(resposta => {
-      console.log(resposta)
-
-    })
+  getRepos = (type) => {
+    return (e) => {
+      ajax().get(this.getGitHubApiUrl(this.state.userinfo.login,type))
+        .then(result => {
+          console.log(result)
+          this.setState({
+            [type]: result.map(repo => ({ name: repo.name, link: repo.html_url }))
+          })
+        })
+    }
   }
 
   render() {
@@ -56,8 +63,8 @@ console.log(resposta)
         repos={this.state.repos}
         starred={this.state.starred}
         handleSearch={(e) => this.handleSearch(e)}
-        getRepos={(e) => this.getRepos(e)}
-        getStarred={(e) => this.getStarred(e)}
+        getRepos={this.getRepos("repos")}
+        getStarred={this.getRepos("starred")}
       />
     );
   }

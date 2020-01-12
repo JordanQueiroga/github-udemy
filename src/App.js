@@ -24,10 +24,11 @@ class App extends Component {
     const keyCode = e.which || e.keyCode;
     const ENTER = 13;
     const value = e.target.value
+    const target  =e.target;
     if (keyCode === ENTER) {
+      target.disabled = true
       ajax().get(this.getGitHubApiUrl(value))
         .then((result) => {
-          console.log(result)
           this.setState({
             userinfo: {
               username: result.name,
@@ -40,13 +41,15 @@ class App extends Component {
             repos: [],
             starred: []
           })
+        }).always(() => {
+          target.disabled = false
         })
     }
   }
 
   getRepos = (type) => {
     return (e) => {
-      ajax().get(this.getGitHubApiUrl(this.state.userinfo.login,type))
+      ajax().get(this.getGitHubApiUrl(this.state.userinfo.login, type))
         .then(result => {
           console.log(result)
           this.setState({
